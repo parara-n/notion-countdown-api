@@ -1,12 +1,10 @@
-// api/event-countdown.js
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   try {
     const NOTION_TOKEN = process.env.NOTION_TOKEN;
     const DATABASE_ID = process.env.DATABASE_ID;
-    const API_KEY = process.env.API_KEY; // 合言葉
+    const API_KEY = process.env.API_KEY;
     const DATE_PROP = "開催日";
 
-    // 合言葉チェック（ブラウザ側から ?key=xxx を付ける）
     if (API_KEY && req.query.key !== API_KEY) {
       return res.status(403).json({ error: "Forbidden" });
     }
@@ -45,9 +43,8 @@ export default async function handler(req, res) {
     const dateValue = item.properties?.[DATE_PROP]?.date?.start;
     if (!dateValue) return res.status(500).json({ error: "開催日が空" });
 
-    // 返す情報は最小（titleも返さない）
     return res.status(200).json({ found: true, date: dateValue });
   } catch (e) {
     return res.status(500).json({ error: "Server error", detail: String(e) });
   }
-}
+};
